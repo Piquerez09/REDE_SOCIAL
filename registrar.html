@@ -2,17 +2,23 @@
 <html lang="pt-BR">
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registrar</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/style.css') }}">
 </head>
 <body>
-    <h1>Registrar</h1>
-    <form action="/register" method="POST">
-        <input type="email" name="email" placeholder="Email" required>
-        <input type="text" name="username" placeholder="Usuário" required>
-        <input type="password" name="password" placeholder="Senha" required>
-        <button type="submit">Registrar</button>
-    </form>
-    <p>Já tem uma conta? <a href="/login">Login</a></p>
+    <header>
+        <h1>Registrar</h1>
+    </header>
+    
+    <main>
+        <form action="/register" method="POST">
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="text" name="username" placeholder="Usuário" required>
+            <input type="password" name="password" placeholder="Senha" required>
+            <button type="submit">Registrar</button>
+        </form>
+        <p>Já tem uma conta? <a href="/login">Login</a></p>
+    </main>
 </body>
 </html>
