@@ -14,6 +14,7 @@ login_manager.login_view = 'login'
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(150), nullable=False, unique=True)
     username = db.Column(db.String(150), nullable=False, unique=True)
     password = db.Column(db.String(150), nullable=False)
     posts = db.relationship('Post', backref='author', lazy=True)
@@ -23,6 +24,12 @@ class Post(db.Model):
     content = db.Column(db.String(500), nullable=False)
     image_file = db.Column(db.String(150), nullable=False, default='default.jpg')
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+
+class Message(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    sender_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    recipient_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    content = db.Column(db.String(500), nullable=False)
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -36,21 +43,22 @@ def home():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        username = request.form['username']
+        email = request.form['email']
         password = request.form['password']
-        user = User.query.filter_by(username=username).first()
+        user = User.query.filter_by(email=email).first()
         if user and user.password == password:
             login_user(user)
             return redirect(url_for('home'))
-        flash('Login Unsuccessful. Please check username and password', 'danger')
+        flash('Login Unsuccessful. Please check email and password', 'danger')
     return render_template('login.html')
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
+        email = request.form['email']
         username = request.form['username']
         password = request.form['password']
-        new_user = User(username=username, password=password)
+        new_user = User(email=email, username=username, password=password)
         db.session.add(new_user)
         db.session.commit()
         flash('Your account has been created! You can now log in', 'success')
@@ -76,6 +84,24 @@ def post():
             db.session.add(new_post)
             db.session.commit()
     return redirect(url_for('home'))
+
+@app.route('/chat', methods=['GET', 'POST'])
+@login_required
+def chat():
+    if request.method == 'POST':
+        recipient_username = request.form['recipient']
+        content = request.form['content']
+        recipient = User.query.filter_by(username=recipient_username).first()
+        if recipient:
+            new_message = Message(sender_id=current_user.id, recipient_id=recipient.id, content=content)
+            db.session.add(new_message)
+            db.session.commit()
+            flash('Mensagem enviada!', 'success')
+        else:
+            flash('Usuário não encontrado.', 'danger')
+    users = User.query.all()
+    messages = Message.query.filter((Message.sender_id == current_user.id) | (Message.recipient_id == current_user.id)).all()
+    return render_template('chat.html', users=users, messages=messages)
 
 if __name__ == "__main__":
     db.create_all()

@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <title>Chat</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Chat</h1>
+        <nav>
+            <a href="/">Feed</a>
+            <a href="/logout">Logout</a>
+        </nav>
+    </header>
+    
+    <main>
+        <h2>Conversas</h2>
+        <div class="messages">
+            {% for message in messages %}
+                <div class="message">
+                    <strong>
+                        {% if message.sender_id == current_user.id %}
+                            Você
+                        {% else %}
+                            {{ message.sender.username }}
+                        {% endif %}
+                    </strong>: {{ message.content }}
+                </div>
+            {% endfor %}
+        </div>
+        
+        <h3>Enviar Mensagem</h3>
+        <form action="/chat" method="POST">
+            <input type="text" name="recipient" placeholder="Usuário do destinatário" required>
+            <textarea name="content" placeholder="Mensagem" required></textarea>
+            <button type="submit">Enviar</button>
+        </form>
+    </main>
+</body>
+</html>
