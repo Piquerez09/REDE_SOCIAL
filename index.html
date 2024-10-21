@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <title>Home</title>
+</head>
+<body>
+    <h1>Feed</h1>
+    {% for post in posts %}
+        <div>
+            <p>{{ post.content }}</p>
+            <img src="{{ post.image_file }}" alt="Post Image">
+        </div>
+    {% endfor %}
+    {% if current_user.is_authenticated %}
+        <form action="/post" method="POST">
+            <textarea name="content" required></textarea>
+            <button type="submit">Postar</button>
+        </form>
+        <a href="/logout">Logout</a>
+    {% else %}
+        <a href="/login">Login</a> | <a href="/register">Registrar</a>
+    {% endif %}
+</body>
+</html>
