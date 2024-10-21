@@ -1,10 +1,13 @@
 from flask import Flask, render_template, redirect, url_for, request, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
+from werkzeug.utils import secure_filename
+import os
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your_secret_key'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
+app.config['UPLOAD_FOLDER'] = 'app/static/images'
 db = SQLAlchemy(app)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
@@ -64,10 +67,14 @@ def logout():
 @login_required
 def post():
     content = request.form.get('content')
-    # Aqui você pode adicionar o tratamento de imagem
-    new_post = Post(content=content, user_id=current_user.id)
-    db.session.add(new_post)
-    db.session.commit()
+    if 'image' in request.files:
+        image = request.files['image']
+        if image:
+            filename = secure_filename(image.filename)
+            image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            new_post = Post(content=content, image_file=filename, user_id=current_user.id)
+            db.session.add(new_post)
+            db.session.commit()
     return redirect(url_for('home'))
 
 if __name__ == "__main__":
