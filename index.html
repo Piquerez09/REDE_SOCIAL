@@ -1,14 +1,19 @@
-<form action="/post" method="POST" enctype="multipart/form-data">
-    <textarea name="content" placeholder="O que você está pensando?" required></textarea>
-    <input type="file" name="image">
-    <button type="submit">Postar</button>
-</form>
-{% with messages = get_flashed_messages() %}
-    {% if messages %}
-        <ul>
-        {% for message in messages %}
-            <li>{{ message }}</li>
-        {% endfor %}
-        </ul>
-    {% endif %}
-{% endwith %}
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Social Media App</title>
+</head>
+<body>
+    <div id="app">
+        <h1>Bem-vindo à Social Media App</h1>
+        <input type="text" id="postContent" placeholder="O que você está pensando?">
+        <button onclick="createPost()">Postar</button>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
+

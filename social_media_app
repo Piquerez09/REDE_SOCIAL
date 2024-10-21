@@ -1,0 +1,14 @@
+social_media_app/
+├── backend/
+│   ├── app.py
+│   ├── models.py
+│   ├── routes.py
+│   ├── database.py
+│   ├── requirements.txt
+├── frontend/
+│   ├── index.html
+│   ├── styles.css
+│   ├── app.js
+│   ├── images/
+│   ├── components/
+└── README.md

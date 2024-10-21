@@ -1,4 +1,0 @@
-if request.method == 'POST':
-    email = request.form['email']
-    password = request.form['password']
-    print(email, password)  # Adicione isso para depuração

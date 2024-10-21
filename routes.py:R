@@ -1,0 +1,11 @@
+# routes.py
+from flask import Blueprint, request, jsonify
+from models import User, Post
+
+main = Blueprint('main', __name__)
+
+@main.route('/api/posts', methods=['POST'])
+def create_post():
+    content = request.json['content']
+    # lógica para salvar a postagem
+    return jsonify({"message": "Post created!"}), 201
